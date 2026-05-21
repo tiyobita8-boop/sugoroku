@@ -3,80 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ひかりの10マスすごろく 完全版</title>
+<title>🌈ひかりの実践すごろくDX</title>
 
 <style>
+
 body{
     margin:0;
     padding:20px;
     font-family:"Hiragino Maru Gothic ProN",sans-serif;
-    background:linear-gradient(to bottom,#fff7e6,#e6f7ff);
-    text-align:center;
+    background:linear-gradient(to bottom,#fff6e9,#e8f7ff);
     color:#444;
+    text-align:center;
 }
 
 h1{
-    font-size:32px;
+    color:#ff66a3;
     margin-bottom:10px;
-    color:#ff6699;
 }
 
 .subtitle{
+    line-height:1.7;
     margin-bottom:20px;
     font-size:15px;
-    line-height:1.6;
-}
-
-.board{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:10px;
-    max-width:1000px;
-    margin:0 auto 20px auto;
-}
-
-.cell{
-    background:white;
-    border-radius:15px;
-    padding:10px;
-    min-height:170px;
-    box-shadow:0 3px 8px rgba(0,0,0,0.1);
-    position:relative;
-    transition:0.3s;
-}
-
-.cell.active{
-    border:4px solid #ffb84d;
-    transform:scale(1.03);
-    background:#fff4d6;
-}
-
-.number{
-    font-size:14px;
-    font-weight:bold;
-    margin-bottom:5px;
-    color:#888;
-}
-
-.name{
-    font-size:17px;
-    font-weight:bold;
-    margin-bottom:8px;
-    color:#ff6699;
-}
-
-.desc{
-    font-size:12px;
-    line-height:1.6;
 }
 
 .controls{
-    margin-top:20px;
+    margin-top:10px;
+    margin-bottom:20px;
 }
 
 button{
-    font-size:20px;
-    padding:14px 28px;
+    font-size:22px;
+    padding:14px 30px;
     border:none;
     border-radius:14px;
     background:#ffb84d;
@@ -91,7 +49,8 @@ button:hover{
 }
 
 .info{
-    margin-top:20px;
+    margin-top:15px;
+    margin-bottom:20px;
     font-size:20px;
     line-height:1.8;
 }
@@ -99,78 +58,138 @@ button:hover{
 .eventBox{
     margin-top:20px;
     background:white;
-    max-width:800px;
+    max-width:900px;
     margin-left:auto;
     margin-right:auto;
-    padding:20px;
-    border-radius:15px;
+    padding:25px;
+    border-radius:18px;
     box-shadow:0 3px 10px rgba(0,0,0,0.1);
+    margin-bottom:25px;
 }
 
 .goal{
+    margin-top:20px;
+    margin-bottom:25px;
     font-size:28px;
     color:#ff6699;
-    margin-top:20px;
-    font-weight:bold;
     line-height:1.8;
+    font-weight:bold;
+}
+
+.board{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    max-width:1200px;
+    margin:0 auto;
+}
+
+.cell{
+    background:white;
+    border-radius:18px;
+    padding:12px;
+    min-height:210px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+    transition:0.3s;
+    position:relative;
+}
+
+.cell.active{
+    background:#fff3cd;
+    border:4px solid #ffb84d;
+    transform:scale(1.03);
+}
+
+.number{
+    font-size:13px;
+    color:#888;
+    margin-bottom:6px;
+}
+
+.name{
+    font-size:17px;
+    font-weight:bold;
+    color:#ff6699;
+    margin-bottom:8px;
+}
+
+.desc{
+    font-size:12px;
+    line-height:1.7;
 }
 
 .footer{
-    margin-top:25px;
-    font-size:13px;
+    margin-top:30px;
     color:#666;
     line-height:1.8;
+    font-size:13px;
 }
 
-@media(max-width:700px){
+@media(max-width:900px){
 
     .board{
         grid-template-columns:repeat(2,1fr);
     }
 
-    h1{
-        font-size:25px;
+}
+
+@media(max-width:600px){
+
+    .board{
+        grid-template-columns:1fr;
     }
 
     .cell{
-        min-height:200px;
+        min-height:auto;
     }
+
+    button{
+        width:100%;
+    }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<h1>🌈ひかりの10マスすごろく</h1>
+<h1>🌈ひかりの実践すごろくDX</h1>
 
 <div class="subtitle">
-ありがとう・浄化・ヒーリングを<br>
-やさしく遊びながら体験する1人用ゲーム😊
+遊びながら整う😊<br>
+潜在意識・ヒーリング・感謝・浄化を<br>
+やさしく実践する1人用すごろく✨
 </div>
 
-<div class="board" id="board"></div>
-
+<!-- サイコロボタンを上へ -->
 <div class="controls">
     <button onclick="rollDice()">🎲 サイコロをふる</button>
 </div>
 
+<!-- 情報表示 -->
 <div class="info">
 現在位置：<span id="position">START</span><br>
 ひかりポイント：⭐<span id="points">0</span>
 </div>
 
+<!-- 今回のイベントを上へ -->
 <div class="eventBox">
-<h2>✨イベント</h2>
-<div id="eventText">
-サイコロをふってスタート😊
-</div>
+    <h2>✨今回のイベント</h2>
+    <div id="eventText">
+        サイコロをふってスタート😊
+    </div>
 </div>
 
+<!-- ゴール表示も上へ -->
 <div class="goal" id="goalText"></div>
 
+<!-- すごろく盤面 -->
+<div class="board" id="board"></div>
+
 <div class="footer">
-🌿「やらなきゃ」ではなく<br>
-「ちょっと整う」「少し軽くなる」感覚を大切に😊
+🌿 「やらなきゃ」ではなく<br>
+「ちょっと軽くなる」「少し整う」を大切に😊
 </div>
 
 <script>
@@ -184,17 +203,17 @@ desc:"ゲーム開始😊"
 
 {
 name:"ありがとうございます",
-desc:"今日ありがとうございますは、神おわしますという、波動を整える言葉ですよね"
+desc:"ちょっと、調子が悪いので、ありがとうございますを何回か唱えて整えよう。今日ありがとうございますは、神おわしますという、波動を整える言葉ですよね"
 },
 
 {
 name:"食べ物浄化",
-desc:"飲み物や食べ物に宇宙エネルギーで浄化しましょう。宇宙エネルギーが使えることに感謝"
+desc:"飲み物や食べ物が目の前にある！宇宙エネルギーで浄化しましょう。宇宙エネルギーが使えることに感謝"
 },
 
 {
 name:"身体ヒーリング",
-desc:"身体をさわり、宇宙エネルギーでヒーリングしましょう。不思議と温かくなります"
+desc:"身体が痛い、、、身体をさわり、右回転宇宙エネルギー痛みをとるでヒーリングしましょう。不思議と温かくなります"
 },
 
 {
@@ -228,8 +247,28 @@ desc:"不安の潜在意識の修復と変換をしよう"
 },
 
 {
+name:"家族からのヘルプ",
+desc:"家族から自信がない！と言ってきました！遠隔で家族の自信がないの潜在意識の修復と変換をしよう"
+},
+
+{
+name:"暇だからお金の大看板",
+desc:"暇だな、、それなら、自分をレベルアップ！心と人と、経済、時間がレベルアップするお金の大看板の潜在意識の修復と変換をしよう"
+},
+
+{
+name:"パートナーとけんか",
+desc:"パートナーとけんかしちゃった、、、自分の癖やパートナーの癖の鏡を洗い出して、恋愛の大看板の潜在意識の修復と変換をしよう"
+},
+
+{
+name:"時間がなくて重い",
+desc:"時間がなくて重くてしょうがない場合は、イシリス高周波アロマのパヒュームを使おう！能力開発、やすらぎ、ストレス解消、人間関係、健康などのenergyを意識して、シュシュっとしてから宇宙に広がるイメージをし、自分の身体に入るイメージをしよう。不思議とスッキリ✨"
+},
+
+{
 name:"GOAL",
-desc:"今日の自分をほめて終了✨"
+desc:"今日の自分をいっぱいほめて終了✨"
 }
 
 ];
@@ -267,7 +306,7 @@ function createBoard(){
 
 function rollDice(){
 
-    if(position >= 10){
+    if(position >= cells.length - 1){
         return;
     }
 
@@ -275,8 +314,8 @@ function rollDice(){
 
     position += dice;
 
-    if(position > 10){
-        position = 10;
+    if(position >= cells.length - 1){
+        position = cells.length - 1;
     }
 
     points++;
@@ -286,7 +325,7 @@ function rollDice(){
     if(position === 0){
         document.getElementById("position").innerText = "START";
     }
-    else if(position === 10){
+    else if(position === cells.length - 1){
         document.getElementById("position").innerText = "GOAL";
     }
     else{
@@ -294,28 +333,34 @@ function rollDice(){
     }
 
     document.getElementById("eventText").innerHTML = `
-        🎲 ${dice} が出ました！<br><br>
+        🎲 <span style="font-size:28px;color:#ff6699;">${dice}</span> が出ました！<br><br>
 
-        <b style="font-size:22px;color:#ff6699;">
-        ${cells[position].name}
-        </b><br><br>
+        <div style="font-size:24px;color:#ff6699;font-weight:bold;">
+            ${cells[position].name}
+        </div>
 
-        ${cells[position].desc}
+        <br>
+
+        <div style="line-height:2;font-size:16px;">
+            ${cells[position].desc}
+        </div>
     `;
 
-    if(position >= 10){
+    if(position >= cells.length - 1){
 
         document.getElementById("goalText").innerHTML = `
         🎉ゴール！🎉<br>
 
-        今日の自分をいっぱいほめてください😊<br><br>
+        今日の自分をいっぱいほめよう😊<br><br>
 
         「整えられてえらい✨」<br>
-        「よくここまで来た✨」
+        「今日も進めた✨」<br>
+        「少し軽くなった✨」
         `;
     }
 
     createBoard();
+
 }
 
 createBoard();
