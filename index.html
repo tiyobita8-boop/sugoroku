@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ひかりの10マスすごろく 完全版</title>
+
+<style>
+body{
+    margin:0;
+    padding:20px;
+    font-family:"Hiragino Maru Gothic ProN",sans-serif;
+    background:linear-gradient(to bottom,#fff7e6,#e6f7ff);
+    text-align:center;
+    color:#444;
+}
+
+h1{
+    font-size:32px;
+    margin-bottom:10px;
+    color:#ff6699;
+}
+
+.subtitle{
+    margin-bottom:20px;
+    font-size:15px;
+    line-height:1.6;
+}
+
+.board{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    max-width:1000px;
+    margin:0 auto 20px auto;
+}
+
+.cell{
+    background:white;
+    border-radius:15px;
+    padding:10px;
+    min-height:170px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.1);
+    position:relative;
+    transition:0.3s;
+}
+
+.cell.active{
+    border:4px solid #ffb84d;
+    transform:scale(1.03);
+    background:#fff4d6;
+}
+
+.number{
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:5px;
+    color:#888;
+}
+
+.name{
+    font-size:17px;
+    font-weight:bold;
+    margin-bottom:8px;
+    color:#ff6699;
+}
+
+.desc{
+    font-size:12px;
+    line-height:1.6;
+}
+
+.controls{
+    margin-top:20px;
+}
+
+button{
+    font-size:20px;
+    padding:14px 28px;
+    border:none;
+    border-radius:14px;
+    background:#ffb84d;
+    color:white;
+    cursor:pointer;
+    box-shadow:0 4px 8px rgba(0,0,0,0.2);
+    transition:0.2s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.info{
+    margin-top:20px;
+    font-size:20px;
+    line-height:1.8;
+}
+
+.eventBox{
+    margin-top:20px;
+    background:white;
+    max-width:800px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.goal{
+    font-size:28px;
+    color:#ff6699;
+    margin-top:20px;
+    font-weight:bold;
+    line-height:1.8;
+}
+
+.footer{
+    margin-top:25px;
+    font-size:13px;
+    color:#666;
+    line-height:1.8;
+}
+
+@media(max-width:700px){
+
+    .board{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    h1{
+        font-size:25px;
+    }
+
+    .cell{
+        min-height:200px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🌈ひかりの10マスすごろく</h1>
+
+<div class="subtitle">
+ありがとう・浄化・ヒーリングを<br>
+やさしく遊びながら体験する1人用ゲーム😊
+</div>
+
+<div class="board" id="board"></div>
+
+<div class="controls">
+    <button onclick="rollDice()">🎲 サイコロをふる</button>
+</div>
+
+<div class="info">
+現在位置：<span id="position">START</span><br>
+ひかりポイント：⭐<span id="points">0</span>
+</div>
+
+<div class="eventBox">
+<h2>✨イベント</h2>
+<div id="eventText">
+サイコロをふってスタート😊
+</div>
+</div>
+
+<div class="goal" id="goalText"></div>
+
+<div class="footer">
+🌿「やらなきゃ」ではなく<br>
+「ちょっと整う」「少し軽くなる」感覚を大切に😊
+</div>
+
+<script>
+
+const cells = [
+
+{
+name:"START",
+desc:"ゲーム開始😊"
+},
+
+{
+name:"ありがとうございます",
+desc:"今日ありがとうございますは、神おわしますという、波動を整える言葉ですよね"
+},
+
+{
+name:"食べ物浄化",
+desc:"飲み物や食べ物に宇宙エネルギーで浄化しましょう。宇宙エネルギーが使えることに感謝"
+},
+
+{
+name:"身体ヒーリング",
+desc:"身体をさわり、宇宙エネルギーでヒーリングしましょう。不思議と温かくなります"
+},
+
+{
+name:"深呼吸の森",
+desc:"ゆっくり深呼吸を3回"
+},
+
+{
+name:"土地ありがとう",
+desc:"家や部屋に右回転宇宙エネルギーで浄化しましょうありがとうを言う"
+},
+
+{
+name:"天使さんお願い",
+desc:"電車に乗る5分前に良い席に座れますようにお願いしたらすわれた！不思議！"
+},
+
+{
+name:"松果体キラリ",
+desc:"イシリスの松果体活性化をしてピンときやすくなった！"
+},
+
+{
+name:"整えタイム",
+desc:"なんかおかしいなと思ったときにイシリスや宇宙エネルギーを三回となえて正気を取り戻した"
+},
+
+{
+name:"なんか不安なとき",
+desc:"不安の潜在意識の修復と変換をしよう"
+},
+
+{
+name:"GOAL",
+desc:"今日の自分をほめて終了✨"
+}
+
+];
+
+let position = 0;
+let points = 0;
+
+const board = document.getElementById("board");
+
+function createBoard(){
+
+    board.innerHTML = "";
+
+    cells.forEach((cell,index)=>{
+
+        const div = document.createElement("div");
+
+        div.className = "cell";
+
+        if(index === position){
+            div.classList.add("active");
+        }
+
+        div.innerHTML = `
+            <div class="number">${index}</div>
+            <div class="name">${cell.name}</div>
+            <div class="desc">${cell.desc}</div>
+        `;
+
+        board.appendChild(div);
+
+    });
+
+}
+
+function rollDice(){
+
+    if(position >= 10){
+        return;
+    }
+
+    const dice = Math.random() < 0.5 ? 1 : 2;
+
+    position += dice;
+
+    if(position > 10){
+        position = 10;
+    }
+
+    points++;
+
+    document.getElementById("points").innerText = points;
+
+    if(position === 0){
+        document.getElementById("position").innerText = "START";
+    }
+    else if(position === 10){
+        document.getElementById("position").innerText = "GOAL";
+    }
+    else{
+        document.getElementById("position").innerText = position + "マス目";
+    }
+
+    document.getElementById("eventText").innerHTML = `
+        🎲 ${dice} が出ました！<br><br>
+
+        <b style="font-size:22px;color:#ff6699;">
+        ${cells[position].name}
+        </b><br><br>
+
+        ${cells[position].desc}
+    `;
+
+    if(position >= 10){
+
+        document.getElementById("goalText").innerHTML = `
+        🎉ゴール！🎉<br>
+
+        今日の自分をいっぱいほめてください😊<br><br>
+
+        「整えられてえらい✨」<br>
+        「よくここまで来た✨」
+        `;
+    }
+
+    createBoard();
+}
+
+createBoard();
+
+</script>
+
+</body>
+</html>
